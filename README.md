@@ -6,7 +6,7 @@ Daybreak is a small, documented Python simulator for replaying local daily stock
 
 - Python 3.11+, a `src/` package, standard-library CSV/JSON, and no runtime dependencies.
 - Strict CSV validation, a long-only USD ledger, fractional shares, market orders, fixed per-order commissions, adverse basis-point slippage, close-based signals, next-available-session open fills, and daily close marks.
-- Buy-and-hold and simple moving-average-crossover examples. Neither is a recommendation and parameters are illustrative, not optimized.
+- Buy-and-hold, simple moving-average-crossover, and a 200-session SMA trend filter. Strategies are examples, not recommendations, and parameters are not optimized.
 - Deterministic simulation outputs for identical inputs. Run timestamp and output folder are intentionally variable metadata.
 - Out of scope: shorting, leverage, intraday simulation, limit/stop orders, partial fills, broker connectivity, options, machine learning, multiple currencies, taxes, splits, and dividends.
 
@@ -46,6 +46,8 @@ Required lowercase CSV columns are `symbol,date,open,high,low,close,volume`; opt
 The engine executes and marks **raw OHLC** only. It does not process splits or dividends. Optional `adj_close` is retained on loaded bars as descriptive data but is not used for execution, marking, or benchmark. Avoid mixing raw and adjusted values. For real research, source a properly licensed, point-in-time dataset and explicitly reconcile corporate actions and delisted securities. This example does not establish data-source quality or universe completeness.
 
 ## Strategy, timing, and fills
+
+`SmaTrendFilter` is a long-or-cash example: after a completed close above the trailing simple moving average, it targets a fixed share quantity equal to a configured fraction of starting cash divided by the signal close. It exits when the close is at or below the average. It uses only completed bars, enters and exits at the next available open, and does not compound its target size. The strategy is illustrative and its threshold is not claimed to be optimal.
 
 A strategy gets an immutable tuple of bars up to and including the completed current session and a read-only snapshot of current quantities. It returns target share quantities. Signals are considered after the close; any resulting market order can fill only at that symbol's **next available bar open**, never the close that generated the signal. Orders stay pending through dates with no bar for their symbol. While an order for a symbol is pending, later target updates for that symbol are ignored; after the order fills or is rejected, the strategy is asked again and may submit a revised target. Orders still pending at end of data are recorded as cancelled.
 

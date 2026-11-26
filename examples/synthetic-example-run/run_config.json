@@ -1,0 +1,26 @@
+{
+  "costs": {
+    "commission_per_order": 1,
+    "slippage_bps": 5
+  },
+  "data_file": "synthetic.csv",
+  "data_sha256": "cec210b84b5886367a004b1e1bd16abfc650f3400cce754e72ec0ec821f35a7e",
+  "date_range": {
+    "end": null,
+    "start": null
+  },
+  "engine_version": "0.1.0",
+  "raw_prices_only": true,
+  "run_id": "20261126T033333Z-cec210b8",
+  "run_timestamp_utc": "2026-11-26T03:33:33+00:00",
+  "starting_cash": 1000,
+  "strategy": {
+    "name": "moving-average-crossover",
+    "parameters": {
+      "long_window": 3,
+      "quantity": 5.0,
+      "short_window": 2,
+      "symbol": "DEMO"
+    }
+  }
+}

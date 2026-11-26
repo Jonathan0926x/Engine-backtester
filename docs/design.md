@@ -27,3 +27,8 @@ These are descriptive calculations, not evidence of an exploitable edge. No Shar
 ## Execution limitations
 
 Daily OHLC bars cannot model queue priority, market impact, partial fills, halts, spreads, or intraday price paths. A next-open fill plus simple slippage and commission is an explicit approximation, not a guarantee of executable live prices. Corporate actions, taxes, borrow, leverage, multiple currencies, and live broker integration are out of scope.
+
+
+## Pending target orders
+
+The engine permits at most one pending order per symbol. If a strategy returns another target for a symbol whose order is still pending, the new target is ignored until the existing order fills. This prevents duplicate queued orders when a symbol has no bar for multiple portfolio sessions. After a fill or rejection, the strategy is reevaluated on the next session.

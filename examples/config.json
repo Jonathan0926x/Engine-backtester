@@ -1,0 +1,16 @@
+{
+  "data": "../data/synthetic.csv",
+  "strategy": {
+    "type": "moving_average_cross",
+    "symbol": "DEMO",
+    "short_window": 2,
+    "long_window": 3,
+    "quantity": 5
+  },
+  "starting_cash": 1000,
+  "commission_per_order": 1,
+  "slippage_bps": 5,
+  "start": null,
+  "end": null,
+  "output_dir": "../results"
+}

@@ -75,6 +75,10 @@ def run_backtest(
         )
         targets = strategy.targets(history_view, holdings)
         for target in targets:
+            # Keep one outstanding order per symbol. Recomputing the same target on
+            # dates without a bar must not queue duplicate orders for a future open.
+            if pending.get(target.symbol):
+                continue
             current_quantity = ledger.positions.get(target.symbol)
             held = current_quantity.quantity if current_quantity else 0.0
             delta = target.quantity - held

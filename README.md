@@ -47,9 +47,9 @@ The engine executes and marks **raw OHLC** only. It does not process splits or d
 
 ## Strategy, timing, and fills
 
-A strategy gets an immutable tuple of bars up to and including the completed current session and a read-only snapshot of current quantities. It returns target share quantities. Signals are considered after the close; any resulting market order can fill only at that symbol's **next available bar open**, never the close that generated the signal. Orders stay pending through dates with no bar for their symbol. Orders still pending at end of data are recorded as cancelled.
+A strategy gets an immutable tuple of bars up to and including the completed current session and a read-only snapshot of current quantities. It returns target share quantities. Signals are considered after the close; any resulting market order can fill only at that symbol's **next available bar open**, never the close that generated the signal. Orders stay pending through dates with no bar for their symbol. While an order for a symbol is pending, later target updates for that symbol are ignored; after the order fills or is rejected, the strategy is asked again and may submit a revised target. Orders still pending at end of data are recorded as cancelled.
 
-At each daily session the engine fills eligible earlier orders at the open, exposes the completed bar to the strategy, submits new orders, then marks portfolio equity at the close. A held instrument with no bar today retains its last available close mark. Strategies should avoid repeated pending target orders if extended to asynchronous instruments; this starter engine is designed for ordinary daily bars.
+At each daily session the engine fills eligible earlier orders at the open, exposes the completed bar to the strategy, submits new orders, then marks portfolio equity at the close. A held instrument with no bar today retains its last available close mark.
 
 Buy price is `open * (1 + slippage_bps / 10,000)`; sell price is `open * (1 - slippage_bps / 10,000)`. Fixed commission is charged per filled order. The order record retains the submitted date, fill date/price, fee, estimated slippage, and rejection/cancellation reason.
 
